@@ -1,5 +1,6 @@
 */.ipynb_checkpoints
 .idea*
-*/lightning_logs/
+*/lightning_logs/*
+/evgeny/lightning_logs/*
 data
 */__pycache__/*
