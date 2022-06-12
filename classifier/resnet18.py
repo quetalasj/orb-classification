@@ -16,10 +16,11 @@ DEFAULT_RESNET_TRANSFORM = transforms.Compose([
 
 
 class Resnet18Model(BaseModel):
-    def __init__(self, in_size, hidden_sizes, out_size, transform=DEFAULT_RESNET_TRANSFORM, freeze_backbone=False):
-        super().__init__(transform)
+    def __init__(self, in_size, hidden_sizes, out_size, transform=DEFAULT_RESNET_TRANSFORM, freeze_backbone=False, nn_type='classificator'):
+        super().__init__(transform, nn_type=nn_type)
         self.backbone = torch.hub.load('pytorch/vision:v0.10.0', 'resnet18', pretrained=True)
         self.backbone.fc = nn.Identity()
+        self.nn_type = nn_type
         self.fc = get_fc_layers(in_size, hidden_sizes, out_size)
         print("network head")
         print(self.fc)

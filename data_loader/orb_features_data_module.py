@@ -13,7 +13,9 @@ class ORBFeaturesDataModule(pl.LightningDataModule):
                  shuffle=True,
                  num_workers=4,
                  num_val=1000,
-                 num_test=1000):
+                 num_test=1000,
+                 nn_type='classificator',
+                 sig_coeff=1):
         super().__init__()
         self.root = root
         self.dataset = dataset
@@ -23,6 +25,8 @@ class ORBFeaturesDataModule(pl.LightningDataModule):
         self.shuffle = shuffle
         self.num_workers = num_workers
         self.classification_threshold = classification_threshold
+        self.nn_type = nn_type
+        self.sig_coeff = sig_coeff
 
         self.num_val = num_val
         self.num_test = num_test
@@ -31,7 +35,7 @@ class ORBFeaturesDataModule(pl.LightningDataModule):
         dataset = ORBFeaturesDataset(self.root,
                                      self.dataset,
                                      classification_threshold=self.classification_threshold,
-                                     transform=self.transform)
+                                     transform=self.transform, nn_type = self.nn_type, sig_coeff=self.sig_coeff)
         num_train = len(dataset) - self.num_val - self.num_test
         self.train_dataset, self.val_dataset, self.test_dataset = random_split(dataset, [num_train,
                                                                                          self.num_val,

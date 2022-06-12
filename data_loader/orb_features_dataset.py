@@ -6,9 +6,13 @@ import numpy as np
 import os
 from pathlib import Path
 
+def sigmoid(x, x0, k):
+    y = 1. / (1.+ np.exp(-k*(x-x0)))
+    return y
+    #return np.expand_dims(y, axis=1)
 
 class ORBFeaturesDataset(Dataset):
-    def __init__(self, root, datasets, classification_threshold, transform, combine_data=True):
+    def __init__(self, root, datasets, classification_threshold, transform, combine_data=True, nn_type='classificator', sig_coeff = 1):
         root = Path(root)
         images_list = []
         labels_list = []
@@ -23,7 +27,10 @@ class ORBFeaturesDataset(Dataset):
 
             dataset_features = pd.read_csv(str(dataset_path / "labels.csv"), header=None).to_numpy().reshape(-1)
             assert dataset_features.shape[0] > 0
-            labels_list.append(dataset_features > classification_threshold)
+            if nn_type == 'classificator':
+                labels_list.append(dataset_features > classification_threshold)
+            elif nn_type == 'regressor':
+                labels_list.append(sigmoid(dataset_features, classification_threshold, sig_coeff))
             features_list.append(dataset_features)
             print('num images:', dataset_images.shape[0])
             print('num labels:',  dataset_features.shape[0])

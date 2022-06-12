@@ -2,13 +2,22 @@ import torch.nn as nn
 import torch
 import pytorch_lightning as pl
 
-
+class MyLoss(nn.MSELoss):
+    def forward(self, input, target):
+        return super().forward(input.float(), target.float())
+    
 class BaseModel(pl.LightningModule):
-    def __init__(self, transform):
+    def __init__(self, transform, nn_type='classificator'):
         super().__init__()
         self._transform = transform
-        self.activation = nn.LogSoftmax(dim=1)
-        self.loss = nn.NLLLoss()
+        self.nn_type = nn_type
+        if self.nn_type == 'classificator':
+            self.activation = nn.LogSoftmax(dim=1)
+            self.loss = nn.NLLLoss()
+        elif self.nn_type == 'regressor':
+            self.activation = nn.Sigmoid()
+            # self.loss = nn.MSELoss()
+            self.loss = MyLoss()
 
     def freeze_backbone(self):
         self.backbone.requires_grad_(False)
