@@ -4,7 +4,7 @@ import pytorch_lightning as pl
 
 class MyLoss(nn.MSELoss):
     def forward(self, input, target):
-        return super().forward(input.float(), target.float())
+        return super().forward(input.float(), target.float().unsqueeze(1))
     
 class BaseModel(pl.LightningModule):
     def __init__(self, transform, nn_type='classificator'):
