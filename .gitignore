@@ -4,3 +4,8 @@
 /evgeny/lightning_logs/*
 data
 */__pycache__/*
+notebooks/*.ckpt
+
+*test.jpg
+*.csv
+Untitled.ipynb
