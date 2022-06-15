@@ -4,23 +4,14 @@ import pytorch_lightning as pl
 
 
 class BaseModel(pl.LightningModule):
-    def __init__(self, transform):
+    def __init__(self):
         super().__init__()
-        self._transform = transform
-        self.activation = nn.LogSoftmax(dim=1)
-        self.loss = nn.NLLLoss()
+        self._transform = None
+        self.activation = None
+        self.loss = None
 
-    def freeze_backbone(self):
-        self.backbone.requires_grad_(False)
-
-    def train_backbone(self):
-        self.backbone.requires_grad_(True)
-
-    def prepare_backbone(self, freeze_backbone):
-        if freeze_backbone:
-            self.freeze_backbone()
-        else:
-            self.train_backbone()
+    def train_backbone(self, requires_grad=True):
+        self.backbone.requires_grad_(requires_grad)
 
     @property
     def transform(self):
@@ -34,7 +25,10 @@ class BaseModel(pl.LightningModule):
         # training_step defined the train loop.
         # It is independent of forward
         images, labels = batch
+        # print('images ', images.shape)
+        # print('labels ', labels.shape)
         predict = self.activation(self.forward(images))
+        # print('predict ', predict.shape)
         loss = self.loss(predict, labels)
         # Logging to TensorBoard by default
         self.log("train_loss", loss)

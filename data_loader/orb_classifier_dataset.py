@@ -7,7 +7,7 @@ import os
 from pathlib import Path
 
 
-class ORBFeaturesDataset(Dataset):
+class ORBClsDataset(Dataset):
     def __init__(self, root, datasets, classification_threshold, transform, combine_data=True):
         root = Path(root)
         images_list = []

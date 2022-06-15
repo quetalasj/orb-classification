@@ -4,3 +4,5 @@
 /evgeny/lightning_logs/*
 data
 */__pycache__/*
+.ipynb_checkpoints
+*.ckpt
